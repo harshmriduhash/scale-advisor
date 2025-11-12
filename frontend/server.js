@@ -41,9 +41,9 @@ app.post('/api/*', async (req, res) => {
         const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to connect to MCP server',
-            message: error.message 
+            message: error.message
         });
     }
 });
