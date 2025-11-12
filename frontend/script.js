@@ -63,7 +63,7 @@ class ScaleAdvisorClient {
         };
 
         formsContainer.innerHTML = forms[toolName] || '<p>Form not available for this tool.</p>';
-        
+
         // Add form submission handler
         const form = formsContainer.querySelector('form');
         if (form) {
@@ -297,13 +297,13 @@ class ScaleAdvisorClient {
                     }
                 })
             });
-            
+
             if (response.ok) {
                 const sessionId = response.headers.get('mcp-session-id');
                 if (sessionId) {
                     this.sessionId = sessionId;
                     console.log('MCP session initialized:', sessionId);
-                    
+
                     // Send initialized notification
                     await this.sendInitializedNotification();
                 }
@@ -334,7 +334,7 @@ class ScaleAdvisorClient {
 
     async executeTool(toolName, formData) {
         this.showLoading(true);
-        
+
         try {
             // Convert FormData to object
             const params = {};
@@ -347,7 +347,7 @@ class ScaleAdvisorClient {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/event-stream',
             };
-            
+
             if (this.sessionId) {
                 headers['mcp-session-id'] = this.sessionId;
             }
@@ -371,7 +371,7 @@ class ScaleAdvisorClient {
             }
 
             const responseText = await response.text();
-            
+
             // Parse SSE format response
             let result;
             if (responseText.startsWith('event: message\ndata: ')) {
@@ -382,13 +382,13 @@ class ScaleAdvisorClient {
                 // Regular JSON response
                 result = JSON.parse(responseText);
             }
-            
+
             if (result.error) {
                 throw new Error(result.error.message || 'Tool execution failed');
             }
-            
+
             this.displayResults(result.result);
-            
+
         } catch (error) {
             this.displayError(error.message);
         } finally {
@@ -408,7 +408,7 @@ class ScaleAdvisorClient {
         };
 
         if (show) {
-            document.getElementById('loading-message').textContent = 
+            document.getElementById('loading-message').textContent =
                 messages[this.currentTool] || 'Processing request...';
             overlay.classList.remove('hidden');
         } else {
@@ -418,14 +418,14 @@ class ScaleAdvisorClient {
 
     displayResults(result) {
         const container = document.getElementById('results-container');
-        
+
         if (result.isError) {
             this.displayError(result.content[0]?.text || 'Unknown error occurred');
             return;
         }
 
         const content = result.content[0]?.text || 'No content returned';
-        
+
         container.innerHTML = `
             <div class="result-card success">
                 <div class="result-header">
@@ -502,10 +502,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Global functions for button actions
-window.copyToClipboard = function(text) {
+window.copyToClipboard = function (text) {
     window.scaleAdvisor.copyToClipboard(text);
 };
 
-window.downloadResults = function(content) {
+window.downloadResults = function (content) {
     window.scaleAdvisor.downloadResults(content);
 };
