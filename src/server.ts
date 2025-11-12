@@ -49,7 +49,7 @@ export function createStandaloneServer(apiKey: string): Server {
 
     serverInstance.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { name, arguments: args } = request.params;
-        
+
         switch (name) {
             case "claude_chat":
                 return await handleClaudeChatTool(claudeClient, args);
