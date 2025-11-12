@@ -11,7 +11,7 @@ class MCPCLIClient {
 
     async start() {
         console.log('🚀 Starting MCP Server...');
-        
+
         // Start MCP server in STDIO mode
         this.mcpProcess = spawn('node', ['dist/index.js', '--stdio'], {
             stdio: ['pipe', 'pipe', 'pipe']
@@ -54,18 +54,18 @@ class MCPCLIClient {
         return new Promise((resolve, reject) => {
             const requestStr = JSON.stringify(request) + '\n';
             let buffer = '';
-            
+
             const onData = (data) => {
                 buffer += data.toString();
                 const lines = buffer.split('\n');
-                
+
                 // Keep the last incomplete line in buffer
                 buffer = lines.pop() || '';
-                
+
                 for (const line of lines) {
                     const trimmed = line.trim();
                     if (!trimmed) continue;
-                    
+
                     // Skip console.log output, only parse JSON responses
                     if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
                         try {
@@ -84,7 +84,7 @@ class MCPCLIClient {
 
             this.mcpProcess.stdout.on('data', onData);
             this.mcpProcess.stdin.write(requestStr);
-            
+
             // Timeout after 120 seconds for comprehensive analysis
             setTimeout(() => {
                 this.mcpProcess.stdout.removeListener('data', onData);
@@ -116,7 +116,7 @@ class MCPCLIClient {
 
         rl.question('Enter command (1-4): ', async (answer) => {
             rl.close();
-            
+
             switch (answer.trim()) {
                 case '1':
                 case 'comprehensive':
@@ -139,7 +139,7 @@ class MCPCLIClient {
                     this.showMenu();
                     return;
             }
-            
+
             console.log('\n' + '='.repeat(80) + '\n');
             this.showMenu();
         });
@@ -148,11 +148,11 @@ class MCPCLIClient {
     async runComprehensiveAnalysis() {
         console.log('🔍 Running comprehensive analysis...');
         console.log('⏳ Starting GitHub + Cloud analysis (faster workflow)...\n');
-        
+
         try {
             const startTime = Date.now();
             console.log('🤖 Initializing analysis agents...');
-            
+
             const response = await this.sendRequest({
                 jsonrpc: '2.0',
                 id: this.requestId++,
@@ -183,7 +183,7 @@ class MCPCLIClient {
     async generateInfrastructure() {
         console.log('🏗️ Running Infrastructure Generation Agent...');
         console.log('⏳ Agent analyzing cloud resource requirements and generating Terraform...\n');
-        
+
         try {
             const startTime = Date.now();
             const response = await this.sendRequest({
@@ -214,7 +214,7 @@ class MCPCLIClient {
 
     async createGitHubPR() {
         console.log('📤 Creating GitHub PR...\n');
-        
+
         try {
             const response = await this.sendRequest({
                 jsonrpc: '2.0',
@@ -223,7 +223,7 @@ class MCPCLIClient {
                 params: {
                     name: 'create_github_pr',
                     arguments: {
-                        repository_url: 'https://github.com/jade-tseng/scale-advisor',
+                        repository_url: 'https://github.com/harshmriduhash/scale-advisor',
                         branch_name: 'feature/ai-generated-infrastructure',
                         pr_title: 'Add AI-Generated Terraform Infrastructure'
                     }
