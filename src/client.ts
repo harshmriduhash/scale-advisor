@@ -12,7 +12,7 @@ export class ClaudeClient {
         this.apiKey = apiKey;
     }
 
-    /**
+    /*
      * Performs a chat completion request with Claude
      */
     async chatCompletion(params: ClaudeChatArgs): Promise<string> {
